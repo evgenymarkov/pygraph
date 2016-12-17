@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/pygraph.iml
+.idea/workspace.xml
+tests/
