@@ -49,13 +49,6 @@ class CommonMixin:
         """
         return len(self.nodes())
 
-    def add_nodes(self, nodelist: list):
-        """
-        Добавление списка вершин в граф
-        """
-        for each in nodelist:
-            self.add_node(each)
-
     def complete(self):
         """
         Дополняет граф до полного.
@@ -69,11 +62,12 @@ class CommonMixin:
 
     def inverse(self):
         """
-        Возвращает дополнение графа (обратный граф)
+        Возвращает дополнение графа (обратный граф).
         https://ru.wikipedia.org/wiki/Дополнение_графа
         """
         inv = self.__class__(self.name)
-        inv.add_nodes(self.nodes())
+        for i in self.nodes():
+            inv.add_node(i, attrs=self.get_node_attributes(i))
         inv.complete()
         for each in self.edges():
             if inv.has_edge(each):
@@ -86,7 +80,8 @@ class CommonMixin:
         Если граф неориентированный, то возвращается копия графа.
         """
         new_graph = self.__class__(self.name)
-        new_graph.add_nodes([n for n in self.nodes()])
+        for i in self.nodes():
+            new_graph.add_node(i)
 
         if self.DIRECTED:
             for (u, v) in self.edges():

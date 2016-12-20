@@ -32,7 +32,8 @@ class TestDiGraph(unittest.TestCase):
 
     def test_raise_exception_when_edge_added_from_non_existing_node(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([0, 1])
+        gr.add_node(0)
+        gr.add_node(1)
         try:
             gr.add_edge((3, 0))
         except AdditionError:
@@ -44,7 +45,8 @@ class TestDiGraph(unittest.TestCase):
 
     def test_raise_exception_when_edge_added_to_non_existing_node(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([0, 1])
+        gr.add_node(0)
+        gr.add_node(1)
         try:
             gr.add_edge((0, 3))
         except AdditionError:
@@ -105,7 +107,9 @@ class TestDiGraph(unittest.TestCase):
 
     def test_complete_digraph(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([x for x in range(10)])
+        for i in range(10):
+            gr.add_node(i)
+
         gr.complete()
         for i in range(10):
             for j in range(10):
@@ -137,7 +141,12 @@ class TestDiGraph(unittest.TestCase):
 
     def test_digraph_equality_nodes(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([0, 1, 2, 3, 4, 5])
+        gr.add_node(0)
+        gr.add_node(1)
+        gr.add_node(2)
+        gr.add_node(3)
+        gr.add_node(4)
+        gr.add_node(5)
 
         gr2 = deepcopy(gr)
 
@@ -157,7 +166,11 @@ class TestDiGraph(unittest.TestCase):
 
     def test_digraph_equality_edges(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([0, 1, 2, 3, 4])
+        gr.add_node(0)
+        gr.add_node(1)
+        gr.add_node(2)
+        gr.add_node(3)
+        gr.add_node(4)
         gr.add_edge((0, 1), weight=1)
         gr.add_edge((0, 2), weight=2)
         gr.add_edge((1, 2), weight=3)
@@ -192,7 +205,9 @@ class TestDiGraph(unittest.TestCase):
 
     def test_digraph_equality_labels(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([0, 1, 2])
+        gr.add_node(0)
+        gr.add_node(1)
+        gr.add_node(2)
         gr.add_edge((0, 1), label="l1")
         gr.add_edge((1, 2), label="l2")
 
@@ -215,7 +230,10 @@ class TestDiGraph(unittest.TestCase):
 
     def test_digraph_equality_attributes(self):
         gr = DiGraph("TestDiGraph")
-        gr.add_nodes([0, 1, 2])
+        gr.add_node(0)
+        gr.add_node(1)
+        gr.add_node(2)
+
         gr.add_edge((0, 1))
         gr.add_node_attribute(1, "a", "x")
         gr.add_node_attribute(2, "b", "y")
@@ -245,6 +263,23 @@ class TestDiGraph(unittest.TestCase):
         assert gr4 != gr
         assert gr != gr5
         assert gr5 != gr
+
+    def test_digraph_equality(self):
+        gr = DiGraph("TestGraph")
+        gr.add_node(2)
+        gr.add_node(4)
+        gr.add_node(3)
+        gr.add_edge((3, 4))
+        gr.add_edge((4, 3))
+
+        gr1 = DiGraph("TestGraph")
+        gr1.add_node(2)
+        gr1.add_node(3)
+        gr1.add_node(4)
+        gr1.add_edge((4, 3))
+        gr1.add_edge((3, 4))
+
+        assert gr == gr1
 
 
 if __name__ == "__main__":
