@@ -104,7 +104,7 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
             attrs = {}
 
         u, v = edge
-        if v not in self._neighbors[u] and u not in self._neighbors[v]:
+        if (v not in self._neighbors[u]) and (u not in self._neighbors[v]):
             self._neighbors[u].append(v)
             if u != v:
                 self._neighbors[v].append(u)

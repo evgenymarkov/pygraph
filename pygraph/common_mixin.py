@@ -1,3 +1,4 @@
+from copy import deepcopy
 from pygraph.basegraph import BaseGraph
 
 
@@ -79,22 +80,21 @@ class CommonMixin:
         Возвращает граф, полученный из заданного сменой направления ребер на противоположное.
         Если граф неориентированный, то возвращается копия графа.
         """
+        if not self.DIRECTED:
+            return deepcopy(self)
+
         new_graph = self.__class__(self.name)
         for i in self.nodes():
-            new_graph.add_node(i)
+            weight = self.get_node_weight(i)
+            label = self.get_node_label(i)
+            attributes = self.get_node_attributes(i)
+            new_graph.add_node(i, weight, label, attributes)
 
-        if self.DIRECTED:
-            for (u, v) in self.edges():
-                weight = self.get_edge_weight((u, v))
-                label = self.get_edge_label((u, v))
-                attributes = self.get_edge_attributes((u, v))
-                new_graph.add_edge((v, u), weight, label, attributes)
-        else:
-            for (u, v) in self.edges():
-                weight = self.get_edge_weight((u, v))
-                label = self.get_edge_label((u, v))
-                attributes = self.get_edge_attributes((u, v))
-                new_graph.add_edge((u, v), weight, label, attributes)
+        for (u, v) in self.edges():
+            weight = self.get_edge_weight((u, v))
+            label = self.get_edge_label((u, v))
+            attributes = self.get_edge_attributes((u, v))
+            new_graph.add_edge((v, u), weight, label, attributes)
 
         return new_graph
 

@@ -39,7 +39,7 @@ class TestDiGraph(unittest.TestCase):
         except AdditionError:
             pass
         else:
-            self.fail("The Graph allowed an edge to be added from a non-existing node.")
+            self.fail()
         assert gr._neighbors == {"0": [], "1": []}
         assert gr._reverse_neighbors == {"0": [], "1": []}
 
@@ -52,7 +52,7 @@ class TestDiGraph(unittest.TestCase):
         except AdditionError:
             pass
         else:
-            self.fail("TThe Graph allowed an edge to be added to a non-existing node.")
+            self.fail()
         assert gr._neighbors == {"0": [], "1": []}
         assert gr._reverse_neighbors == {"0": [], "1": []}
 
@@ -136,7 +136,6 @@ class TestDiGraph(unittest.TestCase):
         self.assertTrue(gr.nodes() == [])
         self.assertTrue(inv.edges() == [])
 
-    # Reverse Graph
     def test_reverse_digraph(self):
         gr = new_digraph(25, 120)
         rev = gr.reverse()

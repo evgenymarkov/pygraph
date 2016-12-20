@@ -147,6 +147,20 @@ class TestGraph(unittest.TestCase):
         self.assertTrue(gr.nodes() == ["0"])
         self.assertTrue(gr.edges() == [])
 
+    def test_reverse_digraph(self):
+        gr = new_graph(25, 120)
+        rev = gr.reverse()
+        for (u, v) in gr.edges():
+            self.assertTrue((v, u) in rev.edges())
+        for (u, v) in rev.edges():
+            self.assertTrue((v, u) in gr.edges())
+
+    def test_reverse_empty_digraph(self):
+        gr = Graph("TestDiGraph")
+        rev = gr.reverse()
+        self.assertTrue(rev.nodes() == [])
+        self.assertTrue(rev.edges() == [])
+
     def test_repr(self):
         gr = new_graph(25, 120)
         gr_repr = repr(gr)
