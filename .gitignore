@@ -17,3 +17,5 @@ venv/
 
 # Other
 .DS_Store
+usage.py
+graph
