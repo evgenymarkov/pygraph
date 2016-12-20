@@ -17,26 +17,26 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         CommonMixin.__init__(self)
         DataMixin.__init__(self)
         BaseGraph.__init__(self, name, weighted)
-        self.node_neighbors = {}
-        self.node_incidence = {}
+        self._neighbors = {}
+        self._reverse_neighbors = {}
 
     def nodes(self) -> list:
         """
         Возвращает список вершин.
         """
-        return list(self.node_neighbors.keys())
+        return list(self._neighbors.keys())
 
     def neighbors(self, node) -> list:
         """
         Возвращает список соседей указанной вершины.
         """
-        return self.node_neighbors[node]
+        return self._neighbors[node]
 
-    def incidents(self, node) -> list:
+    def reverse_neighbors(self, node) -> list:
         """
-        Возвращает список вершин инцидентных указанной.
+        Возвращает список вершин из которых есть рёбра исходящие к указанной.
         """
-        return self.node_incidence[node]
+        return self._reverse_neighbors[node]
 
     def edges(self) -> list:
         """
@@ -45,7 +45,7 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         return [a for a in self._edges()]
 
     def _edges(self):
-        for n, neighbors in self.node_neighbors.items():
+        for n, neighbors in self._neighbors.items():
             for neighbor in neighbors:
                 yield (n, neighbor)
 
@@ -53,7 +53,7 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         Возвращает True если указанная вершина присутствует в графе, иначе False.
         """
-        return node in self.node_neighbors
+        return node in self._neighbors
 
     def add_node(self, node, weight: int = 1, label: str = "", attrs=None):
         """
@@ -64,9 +64,9 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         if attrs is None:
             attrs = {}
-        if node not in self.node_neighbors:
-            self.node_neighbors[node] = []
-            self.node_incidence[node] = []
+        if node not in self._neighbors:
+            self._neighbors[node] = []
+            self._reverse_neighbors[node] = []
             self.set_node_weight(node, weight)
             self.set_node_label(node, label)
             self.add_node_attributes(node, attrs)
@@ -84,16 +84,16 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
             attrs = {}
         u, v = edge
         for n in [u, v]:
-            if n not in self.node_neighbors:
+            if n not in self._neighbors:
                 raise AdditionError("Вершина %s отсутствует в таблице соседей" % n)
-            if n not in self.node_incidence:
+            if n not in self._reverse_neighbors:
                 raise AdditionError("Вершина %s отсутствует в таблице инцидентности" % n)
 
-        if v in self.node_neighbors[u] and u in self.node_incidence[v]:
+        if v in self._neighbors[u] and u in self._reverse_neighbors[v]:
             raise AdditionError("Ребро (%s, %s) уже присутствует в графе" % (u, v))
         else:
-            self.node_neighbors[u].append(v)
-            self.node_incidence[v].append(u)
+            self._neighbors[u].append(v)
+            self._reverse_neighbors[v].append(u)
             self.set_edge_weight(edge, weight)
             self.set_edge_label(edge, label)
             self.add_edge_attributes(edge, attrs)
@@ -102,7 +102,7 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         Удаляет вершину из графа.
         """
-        for each in list(self.incidents(node)):
+        for each in list(self.reverse_neighbors(node)):
             # Удаление всех рёбер инцидентных с заданной вершиной
             self.del_edge((each, node))
 
@@ -111,8 +111,8 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
             self.del_edge((node, each))
 
         # Удаление указанной вершины из таблицы соседей и инцидентности
-        del (self.node_neighbors[node])
-        del (self.node_incidence[node])
+        del (self._neighbors[node])
+        del (self._reverse_neighbors[node])
 
         # Удаление атрибутов вершины
         self.del_node_data(node)
@@ -122,8 +122,8 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         Удаление направленного ребра.
         """
         u, v = edge
-        self.node_neighbors[u].remove(v)
-        self.node_incidence[v].remove(u)
+        self._neighbors[u].remove(v)
+        self._reverse_neighbors[v].remove(u)
         self.del_edge_data((u, v))
 
     def has_edge(self, edge: tuple) -> bool:

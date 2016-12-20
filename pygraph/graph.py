@@ -17,19 +17,19 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         CommonMixin.__init__(self)
         DataMixin.__init__(self)
         BaseGraph.__init__(self, name, weighted)
-        self.node_neighbors = {}
+        self._neighbors = {}
 
     def nodes(self) -> list:
         """
         Возвращает список вершин.
         """
-        return list(self.node_neighbors.keys())
+        return list(self._neighbors.keys())
 
     def neighbors(self, node) -> list:
         """
         Возвращает список соседей указанной вершины.
         """
-        return self.node_neighbors[node]
+        return self._neighbors[node]
 
     def add_node(self, node, weight: int = 1, label: str = "", attrs=None):
         """
@@ -40,8 +40,8 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         if attrs is None:
             attrs = {}
 
-        if node not in self.node_neighbors:
-            self.node_neighbors[node] = []
+        if node not in self._neighbors:
+            self._neighbors[node] = []
             self.set_node_weight(node, weight)
             self.set_node_label(node, label)
             self.add_node_attributes(node, attrs)
@@ -52,7 +52,7 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         """
         Возвращает True если указанная вершина присутствует в графе, иначе False.
         """
-        return node in self.node_neighbors
+        return node in self._neighbors
 
     def del_node(self, node):
         """
@@ -61,7 +61,7 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         for each in list(self.neighbors(node)):
             if each != node:
                 self.del_edge((each, node))
-        del (self.node_neighbors[node])
+        del (self._neighbors[node])
         del (self._nodes_attrs[node])
 
     def edges(self) -> list:
@@ -81,10 +81,10 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
             attrs = {}
 
         u, v = edge
-        if v not in self.node_neighbors[u] and u not in self.node_neighbors[v]:
-            self.node_neighbors[u].append(v)
+        if v not in self._neighbors[u] and u not in self._neighbors[v]:
+            self._neighbors[u].append(v)
             if u != v:
-                self.node_neighbors[v].append(u)
+                self._neighbors[v].append(u)
 
             self.set_edge_weight((u, v), weight)
             self.set_edge_label((u, v), label)
@@ -105,9 +105,9 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         """
         self.del_edge_data(edge)
         u, v = edge
-        self.node_neighbors[u].remove(v)
+        self._neighbors[u].remove(v)
         if u != v:
-            self.node_neighbors[v].remove(u)
+            self._neighbors[v].remove(u)
 
     def __eq__(self, other) -> bool:
         """

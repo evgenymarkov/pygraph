@@ -40,8 +40,8 @@ class TestDiGraph(unittest.TestCase):
             pass
         else:
             self.fail("The Graph allowed an edge to be added from a non-existing node.")
-        assert gr.node_neighbors == {0: [], 1: []}
-        assert gr.node_incidence == {0: [], 1: []}
+        assert gr._neighbors == {0: [], 1: []}
+        assert gr._reverse_neighbors == {0: [], 1: []}
 
     def test_raise_exception_when_edge_added_to_non_existing_node(self):
         gr = DiGraph("TestDiGraph")
@@ -53,8 +53,8 @@ class TestDiGraph(unittest.TestCase):
             pass
         else:
             self.fail("TThe Graph allowed an edge to be added to a non-existing node.")
-        assert gr.node_neighbors == {0: [], 1: []}
-        assert gr.node_incidence == {0: [], 1: []}
+        assert gr._neighbors == {0: [], 1: []}
+        assert gr._reverse_neighbors == {0: [], 1: []}
 
     def test_remove_node(self):
         gr = new_digraph(25, 120)
@@ -137,7 +137,7 @@ class TestDiGraph(unittest.TestCase):
     def test_order_len_equivalance(self):
         gr = new_digraph(25, 120)
         assert len(gr) == gr.order()
-        assert gr.order() == len(gr.node_neighbors)
+        assert gr.order() == len(gr.nodes())
 
     def test_digraph_equality_nodes(self):
         gr = DiGraph("TestDiGraph")

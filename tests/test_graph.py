@@ -40,7 +40,7 @@ class TestGraph(unittest.TestCase):
             pass
         else:
             self.fail()
-        assert gr.node_neighbors == {0: [], 1: []}
+        assert gr._neighbors == {0: [], 1: []}
 
     def test_raise_exception_when_edge_added_to_non_existing_node(self):
         gr = Graph("TestGraph")
@@ -52,7 +52,7 @@ class TestGraph(unittest.TestCase):
             pass
         else:
             self.fail()
-        assert gr.node_neighbors == {0: [], 1: []}
+        assert gr._neighbors == {0: [], 1: []}
 
     def test_remove_node(self):
         gr = new_graph(25, 120)
@@ -142,7 +142,7 @@ class TestGraph(unittest.TestCase):
     def test_order_len_equivalence(self):
         gr = new_graph(25, 120)
         assert len(gr) == gr.order()
-        assert gr.order() == len(gr.node_neighbors)
+        assert gr.order() == len(gr.nodes())
 
     def test_graph_equality_nodes(self):
         gr = Graph("TestGraph")
