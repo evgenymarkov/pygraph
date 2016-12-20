@@ -6,6 +6,15 @@ class GraphError(RuntimeError):
     pass
 
 
+class InvalidIdentifierTypeError(GraphError):
+    """
+    Ошибка сигнализирующая о том, что выбран неподходящий идентификатор вершины или ребра.
+    """
+    def __init__(self, identifier):
+        self.msg = "Идентификатор имеет тип %s, но он должен быть строкой" % type(identifier)
+        self.identifier = identifier
+
+
 class NodeNotFoundError(GraphError):
     """
     Указанная вершина не найдена в графе.

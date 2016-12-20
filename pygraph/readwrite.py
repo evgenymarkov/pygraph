@@ -26,6 +26,7 @@ def read(string: str):
     for each_node in dot_graph.get_nodes():
         # Получение веса вершины
         if "weight" in each_node.get_attributes().keys():
+            graph.weighted = True
             node_weight = int(each_node.get_attributes()["weight"])
             del (each_node.get_attributes()["weight"])
         else:
@@ -48,9 +49,16 @@ def read(string: str):
         if not graph.has_node(each_edge.get_destination()):
             graph.add_node(each_edge.get_destination())
 
+        # pydot generates unwanted quotes on edge output
+        # https://github.com/erocarrera/pydot/issues/66
+        for key, value in each_edge.get_attributes().items():
+            if value.startswith('"') and value.endswith('"'):
+                each_edge.set(key, value[1:-1])
+
         # Получение веса ребра
         if "weight" in each_edge.get_attributes().keys():
-            edge_weight = each_edge.get_attributes()["weight"]
+            graph.weighted = True
+            edge_weight = int(each_edge.get_attributes()["weight"])
             del (each_edge.get_attributes()["weight"])
         else:
             edge_weight = 1

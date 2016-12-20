@@ -28,10 +28,10 @@ def _generate(nodes_count: int, edges_count: int, directed: bool, weight_range: 
     else:
         random_graph = Graph("RandomGraph")
 
-    nodes = range(nodes_count)
+    nodes = [str(x) for x in range(nodes_count)]
 
-    for i in nodes:
-        random_graph.add_node(i)
+    for node in nodes:
+        random_graph.add_node(node)
 
     edges = []
     for x in nodes:

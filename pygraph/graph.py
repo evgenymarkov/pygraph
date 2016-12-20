@@ -1,7 +1,8 @@
 from pygraph.basegraph import BaseGraph
 from pygraph.data_mixin import DataMixin
 from pygraph.common_mixin import CommonMixin
-from pygraph.exceptions import AdditionError, InvalidGraphType
+from pygraph.exceptions import AdditionError, InvalidGraphType, \
+    NodeNotFoundError, EdgeNotFoundError, InvalidIdentifierTypeError
 
 
 class Graph(CommonMixin, DataMixin, BaseGraph):
@@ -29,6 +30,8 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         """
         Возвращает список соседей указанной вершины.
         """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
         return self._neighbors[node]
 
     def add_node(self, node, weight: int = 1, label: str = "", attrs=None):
@@ -37,6 +40,9 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         Опциально можно указать вес вершины, метку и другие атрибуты,
         передав их в в виде словаря с элементами вида имя_атрибута: значение.
         """
+        if not isinstance(node, str):
+            raise InvalidIdentifierTypeError(node)
+
         if attrs is None:
             attrs = {}
 
@@ -58,6 +64,9 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         """
         Удаляет указанную вершину из графа, а также инцидентные ей рёбра.
         """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
+
         for each in list(self.neighbors(node)):
             if each != node:
                 self.del_edge((each, node))
@@ -77,6 +86,12 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         Опциально можно указать вес ребра, метку и другие атрибуты,
         передав их в в виде словаря с элементами вида имя_атрибута: значение.
         """
+        if not isinstance(edge[0], str):
+            raise InvalidIdentifierTypeError(edge[0])
+
+        if not isinstance(edge[1], str):
+            raise InvalidIdentifierTypeError(edge[1])
+
         if attrs is None:
             attrs = {}
 
@@ -103,6 +118,9 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         """
         Удаляет указанное ребро из графа.
         """
+        if edge not in self._edges_attrs:
+            raise EdgeNotFoundError(edge)
+
         self.del_edge_data(edge)
         u, v = edge
         self._neighbors[u].remove(v)

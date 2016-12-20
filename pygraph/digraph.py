@@ -1,7 +1,7 @@
 from pygraph.basegraph import BaseGraph
 from pygraph.data_mixin import DataMixin
 from pygraph.common_mixin import CommonMixin
-from pygraph.exceptions import AdditionError, InvalidGraphType
+from pygraph.exceptions import AdditionError, InvalidGraphType, NodeNotFoundError, EdgeNotFoundError
 
 
 class DiGraph(CommonMixin, DataMixin, BaseGraph):
@@ -30,12 +30,16 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         Возвращает список соседей указанной вершины.
         """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
         return self._neighbors[node]
 
     def reverse_neighbors(self, node) -> list:
         """
         Возвращает список вершин из которых есть рёбра исходящие к указанной.
         """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
         return self._reverse_neighbors[node]
 
     def edges(self) -> list:
@@ -87,7 +91,7 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
             if n not in self._neighbors:
                 raise AdditionError("Вершина %s отсутствует в таблице соседей" % n)
             if n not in self._reverse_neighbors:
-                raise AdditionError("Вершина %s отсутствует в таблице инцидентности" % n)
+                raise AdditionError("Вершина %s отсутствует в обратной таблице соседей" % n)
 
         if v in self._neighbors[u] and u in self._reverse_neighbors[v]:
             raise AdditionError("Ребро (%s, %s) уже присутствует в графе" % (u, v))
@@ -102,6 +106,9 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         Удаляет вершину из графа.
         """
+        if node not in self._neighbors or node not in self._reverse_neighbors:
+            raise NodeNotFoundError(node)
+
         for each in list(self.reverse_neighbors(node)):
             # Удаление всех рёбер инцидентных с заданной вершиной
             self.del_edge((each, node))
@@ -121,6 +128,9 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         Удаление направленного ребра.
         """
+        if edge not in self._edges_attrs:
+            raise EdgeNotFoundError(edge)
+
         u, v = edge
         self._neighbors[u].remove(v)
         self._reverse_neighbors[v].remove(u)
