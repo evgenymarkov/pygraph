@@ -2,7 +2,7 @@ import unittest
 from pygraph.graph import Graph
 from pygraph.digraph import DiGraph
 from pygraph.exceptions import NodeNotFoundError
-from pygraph.algorithms.bfs import breadth_first_paths, breadth_first_bypass, breadth_first_search
+from pygraph.algorithms.bfs import breadth_first_bypass, breadth_first_search, breadth_first_paths
 
 
 class TestBFS(unittest.TestCase):
@@ -73,8 +73,6 @@ class TestBFS(unittest.TestCase):
         gr.add_edge((3, 2))
         gr.add_edge((1, 4))
         path = breadth_first_search(gr, 1, 4)
-        print(gr)
-        print(path)
         assert path == [1, 4]
 
     def test_bfs_paths_in_graph_without_edges(self):
