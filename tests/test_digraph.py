@@ -56,6 +56,52 @@ class TestDiGraph(unittest.TestCase):
         assert gr._neighbors == {"0": [], "1": []}
         assert gr._reverse_neighbors == {"0": [], "1": []}
 
+    def test_input_degree(self):
+        gr = DiGraph("TestDiGraph")
+        gr.add_node("0")
+        gr.add_node("1")
+        gr.add_node("2")
+        gr.add_node("3")
+
+        gr.add_edge(("0", "1"))
+        gr.add_edge(("0", "2"))
+        gr.add_edge(("0", "3"))
+        gr.add_edge(("3", "0"))
+        gr.add_edge(("2", "0"))
+
+        assert gr.node_in_degree("0") == 2
+
+    def test_output_degree(self):
+        gr = DiGraph("TestDiGraph")
+        gr.add_node("0")
+        gr.add_node("1")
+        gr.add_node("2")
+        gr.add_node("3")
+
+        gr.add_edge(("0", "1"))
+        gr.add_edge(("0", "2"))
+        gr.add_edge(("0", "3"))
+        gr.add_edge(("3", "0"))
+        gr.add_edge(("2", "0"))
+
+        assert gr.node_out_degree("0") == 3
+
+    def test_input_degree_with_arrow_to_itself(self):
+        gr = DiGraph("TestDiGraph")
+        gr.add_node("0")
+        gr.add_node("1")
+        gr.add_node("2")
+        gr.add_node("3")
+
+        gr.add_edge(("0", "0"))
+        gr.add_edge(("0", "1"))
+        gr.add_edge(("0", "2"))
+        gr.add_edge(("0", "3"))
+        gr.add_edge(("3", "0"))
+        gr.add_edge(("2", "0"))
+
+        assert gr.node_in_degree("0") == 3
+
     def test_remove_node(self):
         gr = new_digraph(25, 120)
         gr.del_node("0")

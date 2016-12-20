@@ -26,6 +26,14 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         """
         return list(self._neighbors.keys())
 
+    def node_degree(self, node) -> int:
+        """
+        Возвращает степень указанной вершины.
+        """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
+        return len(self.neighbors(node))
+
     def neighbors(self, node) -> list:
         """
         Возвращает список соседей указанной вершины.

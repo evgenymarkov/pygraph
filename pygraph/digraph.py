@@ -26,6 +26,22 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         return list(self._neighbors.keys())
 
+    def node_in_degree(self, node) -> int:
+        """
+        Возвращает входящую степень указанной вершины.
+        """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
+        return len(self.reverse_neighbors(node))
+
+    def node_out_degree(self, node) -> int:
+        """
+        Возвращает исходящую степень указанной вершины.
+        """
+        if node not in self._neighbors:
+            raise NodeNotFoundError(node)
+        return len(self.neighbors(node))
+
     def neighbors(self, node) -> list:
         """
         Возвращает список соседей указанной вершины.

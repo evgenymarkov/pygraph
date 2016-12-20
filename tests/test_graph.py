@@ -54,6 +54,20 @@ class TestGraph(unittest.TestCase):
             self.fail()
         assert gr._neighbors == {"0": [], "1": []}
 
+    def test_node_degree(self):
+        gr = Graph("TestGraph")
+        gr.add_node("0")
+        gr.add_node("1")
+        gr.add_node("2")
+        gr.add_node("3")
+
+        gr.add_edge(("0", "0"))
+        gr.add_edge(("0", "1"))
+        gr.add_edge(("0", "2"))
+        gr.add_edge(("0", "3"))
+
+        assert gr.node_degree("0") == 4
+
     def test_remove_node(self):
         gr = new_graph(25, 120)
         gr.del_node("0")
