@@ -94,6 +94,8 @@ def write(graph) -> str:
                                "Получен %s" % repr(graph))
 
     for node in graph.nodes():
+        if not graph.weighted:
+            graph.del_node_attribute(node, "weight")
         dot_node = pydot.Node(str(node), **graph.get_node_attributes(node))
         dot_graph.add_node(dot_node)
 
