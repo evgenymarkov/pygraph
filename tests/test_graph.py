@@ -304,6 +304,22 @@ class TestGraph(unittest.TestCase):
 
         assert gr == gr1
 
+    def test_graph_has_edge(self):
+        gr = Graph("TestGraph")
+        gr.add_node("4")
+        gr.add_node("3")
+        gr.add_edge(("3", "4"))
+        assert gr.has_edge(("3", "4"))
+        assert gr.has_edge(("4", "3"))
+
+    def test_graph_hasnt_edge(self):
+        gr = Graph("TestGraph")
+        gr.add_node("4")
+        gr.add_node("3")
+        gr.add_edge(("3", "4"))
+        assert not gr.has_edge(("2", "1"))
+        assert not gr.has_edge(("1", "3"))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -156,7 +156,8 @@ class DiGraph(CommonMixin, DataMixin, BaseGraph):
         """
         Возвращает True если указанное ребро присутствует в графе, иначе False.
         """
-        return edge in self._edges_attrs.keys()
+        u, v = edge
+        return u in self._neighbors and v in self._neighbors[u]
 
     def __eq__(self, other):
         """

@@ -120,7 +120,8 @@ class Graph(CommonMixin, DataMixin, BaseGraph):
         Возвращает True если указанное ребро присутствует в графе, иначе False.
         """
         u, v = edge
-        return (u, v) in self._edges_attrs
+        return u in self._neighbors and v in self._neighbors and \
+               u in self._neighbors[v] and v in self._neighbors[u]
 
     def del_edge(self, edge: tuple):
         """
